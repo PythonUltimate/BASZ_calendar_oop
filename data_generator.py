@@ -27,10 +27,10 @@ class DataGenerator:
             }
 
             if self.reminder:
-                event['reminder'] = random.choice([True, False])
+                event['remind'] = random.choice([True, False])
 
             if self.workshop:
-                event['workshop'] = random.choices(self.users, k=random.randint(3, 20))
+                event['participants'] = random.choices(self.users, k=random.randint(3, 20))
 
             events.append(event)
 

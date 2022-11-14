@@ -24,6 +24,7 @@ reminder_data = DataGenerator(
     True,
     False
 )
+
 reminders = reminder_data.generate_data(50)
 reminder_data.save_data(reminders, 'reminder_data.json')
 
@@ -33,8 +34,8 @@ workshop_data = DataGenerator(
     ['breakfast', 'lunch', 'meeting', 'call', 'pay bills'],
     ['eat breakfast', 'eat lunch', 'meeting with boss', 'call to dad', 'electricity'],
     ['ala', 'ola', 'john', 'sam', 'tom'],
-    True,
-    False
+    False,
+    True
 )
 
 workshops = workshop_data.generate_data(50)
