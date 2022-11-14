@@ -40,3 +40,8 @@ class DataGenerator:
     def save_data(data, path):
         with open(path, 'w') as file:
             json.dump(data, file)
+
+    @staticmethod
+    def load_data(path):
+        with open(path, 'r') as file:
+            return json.load(file)
