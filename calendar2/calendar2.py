@@ -1,5 +1,4 @@
-from datetime import datetime, timedelta, MAXYEAR, MINYEAR, date
-from pprint import pprint
+from datetime import datetime, timedelta
 
 from event import Event, Workshop, Reminder
 from helpers import generate_objects
@@ -26,6 +25,15 @@ class Calendar:
             raise TypeError(f'Wrong data type: {type(value)}')
 
         self._events.append(value)
+
+    def delete(self, idx):
+        events = list(filter(lambda x: x.idx == idx, self._events))
+
+        if not events:
+            raise ValueError('Event has been not found, can not be deleted!')
+
+        for event in self._events:
+            self._events.remove(event)
 
     def filter_by_data(self, start_date=datetime.min, end_date=datetime.max):
 
@@ -100,6 +108,16 @@ class Calendar:
 
         return events
 
+    @staticmethod
+    def sort_by_date(fn):
+        def inner(*args, **kwargs):
+            events = fn(*args, **kwargs)
+
+            return sorted(events, key=lambda x: x.start_date)
+
+        return inner
+
+    @sort_by_date
     def filter(self, filter_name, **kwargs):
         options = {
             'duration': self._filter_by_duration,
@@ -120,7 +138,6 @@ data = generate_objects()
 c = Calendar(data)
 
 # f = c.filter_by_data(datetime.now(), datetime.now() + timedelta(weeks=4))
-f = c.filter('participants', search_text='meeting')
+f = c.filter('title', search_text='meeting')
 print(f)
 # pprint(c.events)
-# print(len(c))
