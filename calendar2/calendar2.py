@@ -37,6 +37,20 @@ class Calendar:
 
         return events
 
+    def filter_by_duration(self, duration=0, duration_min=0, duration_max=None):
+
+        if duration is not None:
+            duration_min = duration_max = duration
+
+        events = []
+
+        for event in self._events:
+            if event.duration in range(duration_min,
+                                       (duration_max + 1 if duration_max is not None else event.duration + 1)):
+                events.append(event)
+
+        return events
+
     def __len__(self):
         return len(self._events)
 
@@ -44,7 +58,10 @@ class Calendar:
 data = generate_objects()
 
 c = Calendar(data)
+
 # f = c.filter_by_data(datetime.now(), datetime.now() + timedelta(weeks=4))
-# print(f)
-pprint(c.events)
-print(len(c))
+f = c.filter_by_duration(duration_min=200)
+print(f)
+pprint(c)
+# pprint(c.events)
+# print(len(c))
