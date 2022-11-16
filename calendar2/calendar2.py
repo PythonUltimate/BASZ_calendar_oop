@@ -37,7 +37,7 @@ class Calendar:
 
         return events
 
-    def filter_by_duration(self, duration=0, duration_min=0, duration_max=None):
+    def filter_by_duration(self, duration=None, duration_min=0, duration_max=None):
 
         if duration is not None:
             duration_min = duration_max = duration
@@ -51,6 +51,66 @@ class Calendar:
 
         return events
 
+    def _filter_by_duration(self, **kwargs):
+        events = []
+        for event in self._events:
+            attr = getattr(event, 'duration', None)
+            if attr and attr in range(kwargs.get('min', 0), kwargs.get('max', attr + 1)):
+                events.append(event)
+
+        return events
+
+    def _filter_by_title(self, **kwargs):
+        events = []
+
+        for event in self._events:
+            attr = getattr(event, 'title', None)
+            if kwargs.get('search_text', '') in attr and attr:
+                events.append(event)
+
+        return events
+
+    def _filter_by_description(self, **kwargs):
+        events = []
+
+        for event in self._events:
+            attr = getattr(event, 'description', None)
+            if kwargs.get('search_text', '') in attr and attr:
+                events.append(event)
+
+        return events
+
+    def _filter_by_owner(self, **kwargs):
+        events = []
+
+        for event in self._events:
+            attr = getattr(event, 'owner', None)
+            if kwargs.get('search_name', '') in attr and attr:
+                events.append(event)
+
+        return events
+
+    def _filter_by_participants(self, **kwargs):
+        events = []
+
+        for event in self._events:
+            attr = getattr(event, 'participants', None)
+            if kwargs.get('search_name', '') in attr and attr:
+                events.append(event)
+
+        return events
+
+    def filter(self, filter_name, **kwargs):
+        options = {
+            'duration': self._filter_by_duration,
+            'title': self._filter_by_title,
+            'description': self._filter_by_description,
+            'owner': self._filter_by_owner,
+            'participants': self._filter_by_participants,
+        }
+
+        return options.get(filter_name)(**kwargs)
+
     def __len__(self):
         return len(self._events)
 
@@ -60,8 +120,7 @@ data = generate_objects()
 c = Calendar(data)
 
 # f = c.filter_by_data(datetime.now(), datetime.now() + timedelta(weeks=4))
-f = c.filter_by_duration(duration_min=200)
+f = c.filter('participants', search_text='meeting')
 print(f)
-pprint(c)
 # pprint(c.events)
 # print(len(c))
